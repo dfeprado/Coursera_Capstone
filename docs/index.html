@@ -1,9 +1,156 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<head>
-		<title>Title</title>
+		<title>Jundiaí's Clustering: creating profiles of Neighbourhoods</title>
+		<link rel="stylesheet" type="text/css" href="style.css"/>
 	</head>
 	<body>
-		<p>Hello World!</p>
+		<h1>Jundiaí's Clustering: creating profiles of Neighbourhoods</h1>
+		<article>
+			<h2>Introduction</h2>
+			<p>This project idea is to cluster neighbourhoods of some boroughs in the Jundiaí
+			city, located in the state of São Paulo, Brazil. The clusters will be made using
+			the venues information of each neighbourhood to discover they profile and to
+			give to business owners the knowledge that can help the growth of
+			business/venues or creation of new business/venues. Not just that, this
+			knowledge can help people of my city (or other city) to learn more about it,
+			knowing some aspects of each neighbourhood, helping they, eg "wich kind of
+			venues will be found in that neighbourhood?". To do that, I'll create the clusters
+			of the following boroughs:</p>
+			<ul>
+				<li>Centro (the center of the city);</li>
+				<li>Anhangabaú (west of the center);</li>
+				<li>Ponte São João (east of the center);</li>
+				<li>Vila Rio Branco (north of the center); and</li>
+				<li>Vila Arens (south of the center).</li>
+			</ul>
+		</article>
+		<article>
+			<h2>Data acquision</h2>
+			<p>This project will use a dataset that will be collected by my self, about
+			neighbourhoods of the boroughs mentioned above. This dataset will be made
+			of:</p>
+			<ul>
+				<li>Name of borough and neighbourhood (collected from the following site: <a href="https://jundiai.sp.gov.br/planejamento-e-meio-ambiente/publicacoes-da-smpma/conheca-seu-bairro/">https://jundiai.sp.gov.br/planejamento-e-meio-ambiente/publicacoes-da-smpma/conheca-seu-bairro/</a> - the town hall webpage)</li>
+				<li>Latitude and Longitude of each neighbourhood: this data no readly exist in the web, so, I'll take it from geocoder or Google Maps (this last seems to be more efficient about my city geolocation data)</li>
+			</ul>
+			<p>The dataset do not exist yet, but this is an example of how it will be formatted:</p>
+			<table>
+				<tr>
+					<td>ID</td>
+					<td>Borough</td>
+					<td>Neighbourhood</td>
+					<td>Latitude</td>
+					<td>Longitude</td>
+				</tr>
+			</table>
+			<ul>
+				<li><strong>ID:</strong> generated ID</li>
+				<li><strong>Borough:</strong> the name of Borough</li>
+				<li><strong>Neighbourhood:</strong> the name of Neighbourhood</li>
+				<li><strong>Latitude:</strong> Neighbourhood's latitude</li>
+				<li><strong>Longitude: </strong>Neighbourhood's longitude</li>
+			</ul>
+			<p>The venues information will be fetched from Foursquare API, and will be made by the following columns:</p>
+			<table>
+				<tr>
+					<td>ID</td>
+					<td>Venue</td>
+					<td>Category</td>
+					<td>Latitude</td>
+					<td>Longitude</td>
+				</tr>
+			</table>
+			<ul>
+				<li><strong>ID: </strong>The Venue's Neighbourhood ID (the same ID of the neighbourhoods dataset</li>
+				<li><strong>Venue:</strong> Name of the venue</li>
+				<li><strong>Category: </strong>the categor of the venue</li>
+				<li><strong>Latitude: </strong>Venue's latitude</li>
+				<li><strong>Longitude:</strong> Venue's longitude</li>
+			</ul>
+			
+			<h3>Borough and Neighbourhood dataset</h3>
+			<p>
+				The entire boroughs and neighbourhoods dataset was extracted from the Town
+				Hall website, in form of PDF. So, the extraction, in this case, was manually,
+				cause the amount of data to extract is small.
+			</p>
+			<h3>Latitude and Longitude Coordenates of every Neighbourhood</h3>
+			<p>
+				Geopy (Nominatim) was the API used to fetch latitude and longitude
+				coordenates of each neighbourhood. However, not every neighbourhood has
+				these coordenates registred in nominatim server. So, these neighbourhood
+				without coordenates was removed from the dataset.
+			</p>
+			<h3>Venues location data</h3>
+			<p>
+				The Foursquare API was used to fetch the venues location data, but, it has
+				problems. The neighbourhoods of this city is só close that one venue can
+				belong to two or more neighbourhoods. So, to fix this, I loop through every
+				venue and compared venue coordenates with neighbourhoods coordenates
+				and, assigned the venue to the closest neighbourhood.
+			</p>
+		</article>
+		<article>
+			<h2>Methodology</h2>
+			<p>First, the city map with each neighbourhood from the generated dataset.</p>
+			<img src="jundiai.png"/>
+			<p>
+				The methodology aplied in this project is to cluster the neighbourhood of the
+				refered city to discover their profiles. There are many ways and algorithms to
+				do this. This project uses the Kmeans algorithm, that cluster objects based on
+				they distance. More intra-distance means that two objects should be of the
+				same cluster. More inter-distance means that two objects should be of different
+				clusters.
+			</p>
+			<p>
+				I used the SciKit Learn library to apply the Kmeans to the cleaned data. The
+				Kmeans algorithm needs to be initialized with a constant that defines the
+				number of clusters to be created. Trying the values of this constant (K), I found
+				that K = 12 was a good value, it seems to generate meaninfully clusters.
+				With this, I was able to generate labels to each neighbourhood, assigning it to a
+				cluster. And finally, I was able to plot the graph with folium library, showing
+				clusters in colors (same color means same cluster), as show below.
+			</p>
+			<img src="jundiaiClusters.png"/>
+		</article>
+		
+		<article>
+			<h2>Results</h2>
+			<p>
+				I was able to create a profile of the city neighbourhoods with meaningfully
+				clusters. But, because of a poor location data about my city (small city) I’m
+				unable to generate more interesting information.
+				I found interestings clusters, the clusters number 2 and 9, that has some
+				interesting caracteristics.
+			</p>
+			<h3>Cluster 2 <img src="cluster2logo.png"/></h3>
+			<p>
+				Seems to be made of gym, hotel and coffee shops/shoppings. So, it's primarly a "touristic" cluster.
+			</p>
+			<img src="cluster2.png"/>
+			<h3>Cluster 9 <img src="cluster9logo.png"/></h3>
+			<p>
+				seems to be kind of region with shops and some restaurants
+			</p>
+			<img src="cluster9.png"/>
+		</article>
+		<article>
+			<h2>Discussion</h2>
+			<p>
+				This project showed that this city has a bunch of space to grow in data location
+				(web designs should be happy) and that have a caracteriscts of towns, not
+				cities. It’s an simple city with fews venues.
+			</p>
+		</article>
+		<article>
+			<h2>Conclusion</h2>
+			<p>
+				In this project I build a cluster map of the Jundiaí city (in state of São Paulo,
+				Brazil) that can help business owners to better manage they business and tohave ideas where to open a new business. Thus, the citzen of the city can
+				understanding the profiles of neighbourhoods and decide where to move when
+				needing some venue.
+			</p>
+		</article>
 	</body>
 </html>
